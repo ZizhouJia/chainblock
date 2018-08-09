@@ -12,4 +12,10 @@ namespace crypto{
     std::string result(reinterpret_cast<char*>(hash),32);
     return result;
   }
+
+  std::string hash0(){
+    unsigned char hash[33]={0};
+    std::string result(reinterpret_cast<char*>(hash),32);
+    return result;
+  }
 }

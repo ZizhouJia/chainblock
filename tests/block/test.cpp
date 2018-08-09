@@ -5,7 +5,7 @@
 #include "crypto/ecc.h"
 #include "block/merkle_tree.h"
 
-void test_hash(){
+void test_hash_trans(){
   std::cout<<"begin test transaction hash"<<std::endl;
   std::string content="Hello World";
   std::vector<std::string> private_keys;
@@ -36,6 +36,12 @@ void test_hash(){
 void test_merkle_tree(){
   std::cout<<"begin test merkle"<<std::endl;
   std::vector<std::string> vector_hash;
+  merkle::merkle_tree mtree1=merkle::merkle_tree(vector_hash);
+  std::cout<<crypto::bin2str(mtree1.get_root())<<std::endl;
+  vector_hash.push_back("1234566778999");
+  merkle::merkle_tree mtree2=merkle::merkle_tree(vector_hash);
+  std::cout<<mtree2.get_root()<<std::endl;
+  vector_hash.clear();
   for(int j=0;j<10;j++){
     std::string content="Hello World";
     std::vector<std::string> private_keys;
@@ -55,19 +61,18 @@ void test_merkle_tree(){
     }
     vector_hash.push_back(merkle::trx2hash(trans));
   }
-
-  merkle::merkle_tree mtree1=merkle::vec2mtree(vector_hash);
-  std::vector<std::string> vector_hash2=merkle::mtree2vec(mtree1);
-  merkle::merkle_tree mtree2=merkle::vec2mtree(vector_hash2);
-  if(merkle::merkle_tree_equal(mtree1,mtree2)){
-    std::cout<<"merkle tree test succeed"<<std::endl;
-  }else{
-    std::cout<<"fail on test merkle tree test"<<std::endl;
+  merkle::merkle_tree mtree3=merkle::merkle_tree(vector_hash);
+  std::string root_hash=mtree3.get_root();
+  std::vector<std::string> verify_list=mtree3.get_hash_verify_list_by_index(0);
+  if(vector_hash[0]==verify_list[0]){
+    std::cout<<"verify the content succeed"<<std::endl;
   }
-
+  if(merkle::merkle_tree::verify_the_hash(verify_list,root_hash)){
+    std::cout<<"verify the hash succeed"<<std::endl;
+  }
 }
 
 int main(){
-  test_hash();
+  test_hash_trans();
   test_merkle_tree();
 }

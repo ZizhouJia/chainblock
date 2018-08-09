@@ -1,4 +1,4 @@
-vimcmake_minimum_required (VERSION 3.5)
+cmake_minimum_required (VERSION 3.5)
 project (ChainBlock)
 
 set(CMAKE_CXX_STANDARD 11)
