@@ -50,7 +50,6 @@ namespace trx{
       return 0;
     }
     std::string sign_content_prefix=(trx.prev_trx+trx.content+contact_public_keys(trx));
-    std::cout<<"begin verify"<<std::endl;
     for(int i=0;i<trx.sign_infos.size();i++){
       std::string sign_content=(sign_content_prefix+trx.sign_infos[i].personal_content+trx.sign_infos[i].random_number+trx.sign_infos[i].time);
       std::string hash=crypto::sha256(sign_content);

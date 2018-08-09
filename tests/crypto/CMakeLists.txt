@@ -8,6 +8,6 @@ aux_source_directory(. DIRSRCS)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")
 
-add_executable(test_demo ${DIRSRCS})
+add_executable(test_crypto ${DIRSRCS})
 
-target_link_libraries(test_demo bc_crypto /usr/local/openssl/lib/libcrypto.so /usr/local/lib/libsecp256k1.so)
+target_link_libraries(test_crypto bc_crypto /usr/local/openssl/lib/libcrypto.so /usr/local/lib/libsecp256k1.so)
