@@ -1,10 +1,28 @@
 #include<vector>
 #include<string>
+#include<memory>
+#include<iostream>
 #include "crypto/trx.h"
 #include "crypto/hash.h"
 #include "block/merkle_tree.h"
 
 namespace merkle{
+  std::string trx2hash(trx::transaction trans){
+    return crypto::sha256(trx::trx2json(trans));
+  }
+  merkle_tree::merkle_tree(){
+    this->hashs_number=0;
+    this->elements_size=0;
+  }
+
+  merkle_tree merkle_tree::operator=(merkle_tree& mtree){
+    elements=mtree.elements;
+    hashs_number=mtree.hashs_number;
+    elements_size=mtree.elements_size;
+    mtree.elements=nullptr;
+    return *this;
+  }
+
   merkle_tree::merkle_tree(const std::vector<std::string>& hashs){
     if(hashs.size()==0){
       this->hashs_number=0;
