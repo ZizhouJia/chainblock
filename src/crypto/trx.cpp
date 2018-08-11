@@ -24,7 +24,7 @@ namespace trx{
     }
     for(auto it=trx.sign_infos.begin();it!=trx.sign_infos.end();++it){
       if(it->public_key==public_key){
-        std::string random_number=tools::rand_number();
+        std::string random_number=std::to_string(tools::complex_rand_number());
         std::string date=tools::get_time();
         std::string sign_content=trx.prev_trx+trx.content+contact_public_keys(trx)+personal_content+random_number+date;
         std::string hash=crypto::sha256(sign_content);

@@ -4,6 +4,7 @@
 #include<iostream>
 #include<stdlib.h>
 #include<time.h>
+#include<openssl/rand.h>
 #include "crypto/utils.h"
 
 #include "rapidjson/rapidjson.h"
@@ -25,6 +26,20 @@ namespace tools{
     ss << number;
     ss >> ret;
     return ret;
+  }
+
+  unsigned complex_rand_number(){
+    unsigned char buf[4];
+    std::string r=rand_number();
+    RAND_seed(r.c_str(),32);
+    if(RAND_status()){
+      RAND_bytes(buf, 4);
+      unsigned int number=*((unsigned int*)(buf));
+      return number;
+    }else{
+      std::cout<<"rand_seed is not rand enough"<<std::endl;
+      return 0;
+    }
   }
 
   std::string get_time(){

@@ -15,11 +15,28 @@ namespace block{
     return init==0;
   }
 
-  bool block_lite::calculate_nonce(){
+  void block_lite::init_calculate(){
     std::string content=version+chain_name+std::to_string(block_number)+prev_hash+time+hash_content_root+hash_exp_root;
     std::string hash_current=crypto::sha256(content);
-    unsigned char to_hash[36]={0};
     memcpy(to_hash,hash_current.data(),32);
+    rand_begin=tools::complex_rand_number();
+    *current=rand_begin;
+  }
+
+  bool block_lite::calculate_nonce_once(){
+    std::string hash1=crypto::sha256(to_hash,36);
+    std::string hash2=crypto::sha256(hash1);
+    if(check_zero(hash2.c_str(),hardness)){
+      this->nonce=*current;
+      this->block_hash=hash2;
+      return true;
+    }else{
+      ++(*current);
+      return false;
+    }
+  }
+
+  bool block_lite::calculate_nonce(){
     unsigned int* number=(unsigned int*)(to_hash+32);
     while(*number<0xffffffff){
       std::string hash1=crypto::sha256(to_hash,36);

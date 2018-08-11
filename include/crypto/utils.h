@@ -5,6 +5,7 @@
 namespace tools{
   unsigned char* cast_uchar(const char* str_c);
   std::string rand_number();
+  unsigned int complex_rand_number();
   std::string get_time();
 }
 

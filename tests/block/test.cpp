@@ -104,6 +104,7 @@ void test_pool_and_block(){
   std::cout<<"time is :"<<t<<std::endl;
   block::block b(chain_name,block_id,prev_hash,t);
   b.set_block_from_pool(pool);
+  b.init_calculate();
   if(b.calculate_nonce()){
     std::cout<<"succeed on find the nonce"<<std::endl;
   }else{
@@ -116,6 +117,15 @@ void test_pool_and_block(){
   }else{
     std::cout<<"fail on verify the block hash"<<std::endl;
   }
+  b.init_calculate();
+  while(!b.calculate_nonce_once());
+
+  if(b.verify_the_block_hash()){
+    std::cout<<"succeed on verify the block hash"<<std::endl;
+  }else{
+    std::cout<<"fail on verify the block hash"<<std::endl;
+  }
+
 
 }
 
