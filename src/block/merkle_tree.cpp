@@ -7,9 +7,6 @@
 #include "block/merkle_tree.h"
 
 namespace merkle{
-  std::string trx2hash(trx::transaction trans){
-    return crypto::sha256(trx::trx2json(trans));
-  }
   merkle_tree::merkle_tree(){
     this->hashs_number=0;
     this->elements_size=0;

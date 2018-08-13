@@ -9,8 +9,7 @@
 #include "string.h"
 
 namespace merkle{
-
-  std::string trx2hash(trx::transaction trans);
+  
   class merkle_tree{
   private:
     std::string* elements=nullptr;

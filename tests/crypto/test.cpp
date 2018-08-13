@@ -59,38 +59,48 @@ void test_trx(){
   std::vector<std::string> private_keys;
   std::vector<std::string> public_keys;
   std::vector<std::string> personal_contents;
-
+  trx::transaction trans;
+  trans.set_chain_name("123");
+  trans.set_contract("456");
+  trans.set_prev_trx("678");
+  trans.set_action("action");
+  trans.set_content("Hello world 你好!");
+  trans.add_parties("123");
   for(int i=0;i<3;i++){
     std::string private_key=crypto::generate_private_key();
     std::string public_key=crypto::generate_public_key(private_key);
     private_keys.push_back(private_key);
     public_keys.push_back(public_key);
     std::string personal_content="Hello kite"+tools::rand_number();
-    personal_contents.push_back(personal_content);
+    std::vector<std::string> link_trx;
+    for(int j=0;i<i;j++){
+        link_trx.push_back("345");
+    }
+    trans.add_signer(public_key,personal_content,link_trx);
   }
-  std::string content="Hello world 你好!";
-  trx::transaction trans(content,public_keys);
-
   for(int i=0;i<3;i++){
-    trx::sign_trx(trans,personal_contents[i],public_keys[i],private_keys[i]);
+    trans.sign_trx(public_keys[i],private_keys[i]);
   }
 
-  if(trx::verify_trx(trans)){
+  if(trans.verify_trx()){
     std::cout<<"verify succeed"<<std::endl;
   }
 
-  std::string json=trx::trx2json(trans);
+  std::string json=trans.to_json();
+
 
   std::cout<<json<<std::endl;
 
-  trx::transaction trans2=trx::json2trx(json);
+  trx::transaction trans2=trx::transaction(json);
 
-  if(trx::verify_trx(trans2)){
+  if(trans2.verify_trx()){
     std::cout<<" json<->trx verify succeed"<<std::endl;
+  }else{
+    std::cout<<"fail to verify json<->trx"<<std::endl;
   }
 
-  trans.sign_infos[2].sign="123456";
-  if(!trx::verify_trx(trans)){
+  trans.set_action("7788");
+  if(trans.verify_trx()){
     std::cout<<"unverify succeed"<<std::endl;
   }
 

@@ -8,7 +8,7 @@ namespace block{
   std::string trx_pool::get_hash_content_root(){
     std::vector<std::string> hashs;
     for(int i=0;i<items.size();i++){
-      hashs.push_back(merkle::trx2hash(items[i]));
+      hashs.push_back(items[i].to_hash());
     }
     return merkle::merkle_tree(hashs).get_root();
   };
@@ -24,7 +24,7 @@ namespace block{
   merkle::merkle_tree* trx_pool::make_merkle_tree(){
     std::vector<std::string> hashs;
     for(int i=0;i<items.size();i++){
-      hashs.push_back(merkle::trx2hash(items[i]));
+      hashs.push_back(items[i].to_hash());
     }
     merkle::merkle_tree* ptr=new merkle::merkle_tree(hashs);
     return ptr;

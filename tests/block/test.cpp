@@ -10,29 +10,42 @@
 
 void test_hash_trans(){
   std::cout<<"begin test transaction hash"<<std::endl;
-  std::string content="Hello World";
   std::vector<std::string> private_keys;
   std::vector<std::string> public_keys;
-
-  for(int i=0;i<10;i++){
+  std::vector<std::string> personal_contents;
+  trx::transaction trans;
+  trans.set_chain_name("123");
+  trans.set_contract("456");
+  trans.set_prev_trx("678");
+  trans.set_action("action");
+  trans.set_content("Hello world 你好!");
+  trans.add_parties("123");
+  for(int i=0;i<3;i++){
     std::string private_key=crypto::generate_private_key();
     std::string public_key=crypto::generate_public_key(private_key);
     private_keys.push_back(private_key);
     public_keys.push_back(public_key);
+    std::string personal_content="Hello kite"+tools::rand_number();
+    std::vector<std::string> link_trx;
+    for(int j=0;i<i;j++){
+        link_trx.push_back("345");
+    }
+    trans.add_signer(public_key,personal_content,link_trx);
   }
-  trx::transaction trans(content,public_keys);
-  for(int i=0;i<10;i++){
-    trx::sign_trx(trans,"123",public_keys[i],private_keys[i]);
+
+  for(int i=0;i<3;i++){
+    trans.sign_trx(public_keys[i],private_keys[i]);
   }
-  if(!trx::verify_trx(trans)){
-    std::cout<<"fail to verify"<<std::endl;
-  }
-  std::string hash1=merkle::trx2hash(trans);
-  std::string json=trx::trx2json(trans);
-  trx::transaction trans2=trx::json2trx(json);
-  std::string hash2=merkle::trx2hash(trans2);
+
+  std::string hash1=trans.to_hash();
+  std::cout<<crypto::bin2str(hash1)<<std::endl;
+  std::string json=trans.to_json();
+  trx::transaction trans2(json);
+  std::string hash2=trans2.to_hash();
   if(hash1==hash2){
     std::cout<<"trx hash succeed"<<std::endl;
+  }else{
+    std::cout<<"fail on test hash"<<std::endl;
   }
 }
 
@@ -46,23 +59,33 @@ void test_merkle_tree(){
   std::cout<<mtree2.get_root()<<std::endl;
   vector_hash.clear();
   for(int j=0;j<10;j++){
-    std::string content="Hello World";
     std::vector<std::string> private_keys;
     std::vector<std::string> public_keys;
-    for(int i=0;i<10;i++){
+    std::vector<std::string> personal_contents;
+    trx::transaction trans;
+    trans.set_chain_name("123");
+    trans.set_contract("456");
+    trans.set_prev_trx("678");
+    trans.set_action("action");
+    trans.set_content("Hello world 你好!");
+    trans.add_parties("123");
+    for(int i=0;i<3;i++){
       std::string private_key=crypto::generate_private_key();
       std::string public_key=crypto::generate_public_key(private_key);
       private_keys.push_back(private_key);
       public_keys.push_back(public_key);
+      std::string personal_content="Hello kite"+tools::rand_number();
+      std::vector<std::string> link_trx;
+      for(int j=0;i<i;j++){
+          link_trx.push_back("345");
+      }
+      trans.add_signer(public_key,personal_content,link_trx);
     }
-    trx::transaction trans(content,public_keys);
-    for(int i=0;i<10;i++){
-      trx::sign_trx(trans,"123",public_keys[i],private_keys[i]);
+
+    for(int i=0;i<3;i++){
+      trans.sign_trx(public_keys[i],private_keys[i]);
     }
-    if(!trx::verify_trx(trans)){
-      std::cout<<"fail to verify"<<std::endl;
-    }
-    vector_hash.push_back(merkle::trx2hash(trans));
+    vector_hash.push_back(trans.to_hash());
   }
   merkle::merkle_tree mtree3=merkle::merkle_tree(vector_hash);
   std::string root_hash=mtree3.get_root();
@@ -78,21 +101,31 @@ void test_merkle_tree(){
 void test_pool_and_block(){
   block::trx_pool pool;
   for(int j=0;j<10;j++){
-    std::string content="Hello World";
     std::vector<std::string> private_keys;
     std::vector<std::string> public_keys;
-    for(int i=0;i<10;i++){
+    std::vector<std::string> personal_contents;
+    trx::transaction trans;
+    trans.set_chain_name("123");
+    trans.set_contract("456");
+    trans.set_prev_trx("678");
+    trans.set_action("action");
+    trans.set_content("Hello world 你好!");
+    trans.add_parties("123");
+    for(int i=0;i<3;i++){
       std::string private_key=crypto::generate_private_key();
       std::string public_key=crypto::generate_public_key(private_key);
       private_keys.push_back(private_key);
       public_keys.push_back(public_key);
+      std::string personal_content="Hello kite"+tools::rand_number();
+      std::vector<std::string> link_trx;
+      for(int j=0;i<i;j++){
+          link_trx.push_back("345");
+      }
+      trans.add_signer(public_key,personal_content,link_trx);
     }
-    trx::transaction trans(content,public_keys);
-    for(int i=0;i<10;i++){
-      trx::sign_trx(trans,"123",public_keys[i],private_keys[i]);
-    }
-    if(!trx::verify_trx(trans)){
-      std::cout<<"fail to verify"<<std::endl;
+
+    for(int i=0;i<3;i++){
+      trans.sign_trx(public_keys[i],private_keys[i]);
     }
     pool.add_member(trans,"exps");
   }
