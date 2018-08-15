@@ -9,7 +9,7 @@
 #include "string.h"
 
 namespace merkle{
-  
+
   class merkle_tree{
   private:
     std::string* elements=nullptr;
